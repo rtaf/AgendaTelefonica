@@ -3,19 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package agendatelefonica;
+package com.github.rtaf.agendatelefonica.model;
 
 /**
  *
  * @author rtafuni
  */
-public class AgendaTelefonica {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+public class NumarFix extends NumarTelefon {
+    
+    public NumarFix(String numarTelefon) {
+        super(numarTelefon);
     }
+    
     
 }
