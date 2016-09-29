@@ -5,6 +5,7 @@
  */
 package com.github.rtaf.agendatelefonica.view;
 
+import javax.swing.JMenuBar;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -77,6 +78,21 @@ public class AgendaUI extends javax.swing.JFrame {
         butonStergere = new javax.swing.JButton();
         butonActualizare = new javax.swing.JButton();
         butonAnulare = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenuFile = new javax.swing.JMenu();
+        jMenuItemOpen = new javax.swing.JMenuItem();
+        jMenuItemSave = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItemIesire = new javax.swing.JMenuItem();
+        jMenuAbonati = new javax.swing.JMenu();
+        jMenuItemAdauga = new javax.swing.JMenuItem();
+        jMenuItemStergere = new javax.swing.JMenuItem();
+        jMenuItemActualizare = new javax.swing.JMenuItem();
+        jMenuItemCauta = new javax.swing.JMenuItem();
+        jMenuHelp = new javax.swing.JMenu();
+        jMenuItemInregistrare = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -159,25 +175,67 @@ public class AgendaUI extends javax.swing.JFrame {
 
         butonAnulare.setText("Anulare");
 
+        jMenuFile.setText("File");
+
+        jMenuItemOpen.setText("Open");
+        jMenuFile.add(jMenuItemOpen);
+
+        jMenuItemSave.setText("Save");
+        jMenuFile.add(jMenuItemSave);
+        jMenuFile.add(jSeparator1);
+
+        jMenuItemIesire.setText("Iesire");
+        jMenuFile.add(jMenuItemIesire);
+
+        jMenuBar1.add(jMenuFile);
+
+        jMenuAbonati.setText("Abonati");
+
+        jMenuItemAdauga.setText("Adauga");
+        jMenuAbonati.add(jMenuItemAdauga);
+
+        jMenuItemStergere.setText("Stergere");
+        jMenuAbonati.add(jMenuItemStergere);
+
+        jMenuItemActualizare.setText("Actualizare");
+        jMenuAbonati.add(jMenuItemActualizare);
+
+        jMenuItemCauta.setText("Cauta");
+        jMenuAbonati.add(jMenuItemCauta);
+
+        jMenuBar1.add(jMenuAbonati);
+
+        jMenuHelp.setText("Help");
+
+        jMenuItemInregistrare.setText("Inregistrare");
+        jMenuHelp.add(jMenuItemInregistrare);
+        jMenuHelp.add(jSeparator2);
+
+        jMenuItemAbout.setText("About");
+        jMenuHelp.add(jMenuItemAbout);
+
+        jMenuBar1.add(jMenuHelp);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(butonAdauga, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(butonSalavare, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(butonStergere, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(butonActualizare, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(butonAnulare, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
-                .addGap(262, 262, 262))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(butonAdauga, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(butonSalavare, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(butonStergere, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(butonActualizare, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(butonAnulare, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                        .addGap(262, 262, 262))
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -253,8 +311,23 @@ public class AgendaUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelNrTel;
     private javax.swing.JLabel jLabelNume;
     private javax.swing.JLabel jLabelPrenume;
+    private javax.swing.JMenu jMenuAbonati;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenuFile;
+    private javax.swing.JMenu jMenuHelp;
+    private javax.swing.JMenuItem jMenuItemAbout;
+    private javax.swing.JMenuItem jMenuItemActualizare;
+    private javax.swing.JMenuItem jMenuItemAdauga;
+    private javax.swing.JMenuItem jMenuItemCauta;
+    private javax.swing.JMenuItem jMenuItemIesire;
+    private javax.swing.JMenuItem jMenuItemInregistrare;
+    private javax.swing.JMenuItem jMenuItemOpen;
+    private javax.swing.JMenuItem jMenuItemSave;
+    private javax.swing.JMenuItem jMenuItemStergere;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTable jTableAbonati;
     private javax.swing.JTextField textCNP;
     private javax.swing.JTextField textNrTel;
