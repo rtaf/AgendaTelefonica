@@ -270,11 +270,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Salvare"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butonSalavareActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="butonStergere">
       <Properties>
         <Property name="text" type="java.lang.String" value="Stergere"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butonStergereActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="butonActualizare">
       <Properties>

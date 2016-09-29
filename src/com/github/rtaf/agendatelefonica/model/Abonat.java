@@ -10,7 +10,7 @@ package com.github.rtaf.agendatelefonica.model;
  * @author rtafuni
  */
 public class Abonat {
-    
+
     private String nume;
     private String prenume;
     private String cnp;
@@ -59,6 +59,5 @@ public class Abonat {
     public String toString() {
         return "Abonat{" + "nume=" + nume + ", prenume=" + prenume + ", cnp=" + cnp + ", telefon=" + telefon + '}';
     }
-    
-    
+
 }

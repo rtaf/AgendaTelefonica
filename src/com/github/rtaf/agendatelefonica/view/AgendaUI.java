@@ -5,9 +5,20 @@
  */
 package com.github.rtaf.agendatelefonica.view;
 
+import com.github.rtaf.agendatelefonica.model.Abonat;
+import com.github.rtaf.agendatelefonica.model.ModelTabelAbonat;
+import com.github.rtaf.agendatelefonica.model.NumarMobil;
+import com.github.rtaf.agendatelefonica.model.NumarTelefon;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import javax.swing.JDialog;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -15,8 +26,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AgendaUI extends javax.swing.JFrame {
 
-    DefaultTableModel modelTabelAbonati;
-    
+    ModelTabelAbonat modelTabelAbonati;
+
     /**
      * Creates new form AgendaUI
      */
@@ -49,10 +60,15 @@ public class AgendaUI extends javax.swing.JFrame {
 
     void adaugareInTabelAbonati() {
         String[] numeColoane = {"ID", "Nume", "Prenume", "CNP", "NrTel"};
-        modelTabelAbonati = new DefaultTableModel(null, numeColoane);
+        NumarTelefon tel = new NumarMobil("0755775775");
+
+        Abonat a1 = new Abonat("Ion", "Popescu", "1778845878787", tel);
+        List<Abonat> listaAbonati = new ArrayList<>();
+        listaAbonati.add(a1);
+        modelTabelAbonati = new ModelTabelAbonat(listaAbonati);
         jTableAbonati.setModel(modelTabelAbonati);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -168,8 +184,18 @@ public class AgendaUI extends javax.swing.JFrame {
         });
 
         butonSalavare.setText("Salvare");
+        butonSalavare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonSalavareActionPerformed(evt);
+            }
+        });
 
         butonStergere.setText("Stergere");
+        butonStergere.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonStergereActionPerformed(evt);
+            }
+        });
 
         butonActualizare.setText("Actualizare");
 
@@ -266,40 +292,50 @@ public class AgendaUI extends javax.swing.JFrame {
         EnableTextFieldsUI();
     }//GEN-LAST:event_butonAdaugaActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AgendaUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AgendaUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AgendaUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AgendaUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void butonSalavareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonSalavareActionPerformed
+        // TODO add your handling code here:
+        String nume = textNume.getText();
+        String prenume = textPrenume.getText();
+        String cnp = textCNP.getText();
+        String telefon = textNrTel.getText();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AgendaUI().setVisible(true);
-            }
-        });
+        NumarTelefon numarTelefon = new NumarMobil(telefon);
+        Abonat abonatSalvat = new Abonat(nume, prenume, cnp, numarTelefon);
+
+        modelTabelAbonati.addAbonat(abonatSalvat);
+        jTableAbonati.setModel(modelTabelAbonati);
+
+        cleanFieldsAfterAdd();
+
+        saveToDatabase();
+
+
+    }//GEN-LAST:event_butonSalavareActionPerformed
+
+    private void butonStergereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonStergereActionPerformed
+        Object source = evt.getSource();
+
+        int selectedRow = jTableAbonati.getSelectedRow();
+        if (selectedRow != -1) {
+            ModelTabelAbonat model = (ModelTabelAbonat) jTableAbonati.getModel();
+            model.removeAbonat(model.getAbonat(selectedRow));
+        } else {
+            JOptionPane.showMessageDialog(null, "Selectie goala");
+        }
+    }//GEN-LAST:event_butonStergereActionPerformed
+
+    private void cleanFieldsAfterAdd() {
+        textNume.setText("");
+        textPrenume.setText("");
+        textCNP.setText("");
+        textNrTel.setText("");
+
+        textNume.setEnabled(false);
+        textPrenume.setEnabled(false);
+        textCNP.setEnabled(false);
+        textNrTel.setEnabled(false);
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton butonActualizare;
@@ -334,4 +370,11 @@ public class AgendaUI extends javax.swing.JFrame {
     private javax.swing.JTextField textNume;
     private javax.swing.JTextField textPrenume;
     // End of variables declaration//GEN-END:variables
+
+    private void saveToDatabase() {
+        ModelTabelAbonat model = (ModelTabelAbonat) jTableAbonati.getModel();
+        List<Abonat> abonati = model.getAbonati();
+        System.out.println(abonati);
+
+    }
 }

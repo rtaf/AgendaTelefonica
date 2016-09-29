@@ -10,9 +10,9 @@ package com.github.rtaf.agendatelefonica.model;
  * @author rtafuni
  */
 public class NumarMobil extends NumarTelefon {
-    
+
     public NumarMobil(String numarTelefon) {
         super(numarTelefon);
     }
-    
+
 }

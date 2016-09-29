@@ -10,7 +10,7 @@ package com.github.rtaf.agendatelefonica.model;
  * @author rtafuni
  */
 public abstract class NumarTelefon {
-    
+
     private String numarTelefon;
 
     public NumarTelefon(String numarTelefon) {
@@ -27,8 +27,7 @@ public abstract class NumarTelefon {
 
     @Override
     public String toString() {
-        return "NumarTelefon{" + "numarTelefon=" + numarTelefon + '}';
+        return numarTelefon;
     }
-    
-    
+
 }
