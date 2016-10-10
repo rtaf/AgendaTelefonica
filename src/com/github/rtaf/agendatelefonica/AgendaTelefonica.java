@@ -6,13 +6,17 @@
 package com.github.rtaf.agendatelefonica;
 
 import com.github.rtaf.agendatelefonica.view.AgendaUI;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author rtafuni
  */
 public class AgendaTelefonica {
-
 
     /**
      * @param args the command line arguments
@@ -44,9 +48,13 @@ public class AgendaTelefonica {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AgendaUI().setVisible(true);
+                try {
+                    new AgendaUI().setVisible(true);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(AgendaTelefonica.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
-    
+
 }

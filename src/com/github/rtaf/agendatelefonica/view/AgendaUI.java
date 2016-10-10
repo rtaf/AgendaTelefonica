@@ -9,16 +9,17 @@ import com.github.rtaf.agendatelefonica.model.Abonat;
 import com.github.rtaf.agendatelefonica.model.ModelTabelAbonat;
 import com.github.rtaf.agendatelefonica.model.NumarMobil;
 import com.github.rtaf.agendatelefonica.model.NumarTelefon;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import javax.swing.JDialog;
-import javax.swing.JMenuBar;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -27,14 +28,69 @@ import javax.swing.table.TableModel;
 public class AgendaUI extends javax.swing.JFrame {
 
     ModelTabelAbonat modelTabelAbonati;
+    Timer timerReclame;
+
+    //path to the pictures directory; used for slide show
+    Path path = Paths.get("pictures");
+    Path absolutePath = path.toAbsolutePath();
+
+    // File representing the folder with the pictures 
+    final File dir = new File(absolutePath.toString());
+
+    // array of supported extensions 
+    static final String[] EXTENSIONS = new String[]{
+        "jpg" // and other formats you need
+    };
+
+    //list with the icons for the JLabel (the pictures in this case)
+    List<ImageIcon> iconList = new ArrayList();
+    //index and randomGenerator to pick one picture with the timer
+    int index;
+    private final Random randomGenerator;
+
+    // filter to identify images based on their extensions
+    static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
+
+        @Override
+        public boolean accept(final File dir, final String name) {
+            for (final String ext : EXTENSIONS) {
+                if (name.endsWith("." + ext)) {
+                    return (true);
+                }
+            }
+            return (false);
+        }
+    };
 
     /**
      * Creates new form AgendaUI
      */
-    public AgendaUI() {
+    public AgendaUI() throws InterruptedException {
         initComponents();
         DisableTextFieldsUI();
         adaugareInTabelAbonati();
+
+        randomGenerator = new Random();
+        if (dir.isDirectory()) { // make sure it's a directory
+            for (final File f : dir.listFiles(IMAGE_FILTER)) {
+                System.out.println(f.getAbsolutePath());
+                iconList.add(new ImageIcon(f.getAbsolutePath()));
+
+            }
+        }
+
+        //set a timer to change pictures in JLabelReclame
+        Timer t = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                index = randomGenerator.nextInt(iconList.size());
+                System.out.println(index);
+                jLabelReclame.setIcon(iconList.get(index));
+            }
+
+        };
+        t.schedule(task, 0, 5000);
     }
 
     /**
@@ -94,6 +150,7 @@ public class AgendaUI extends javax.swing.JFrame {
         butonStergere = new javax.swing.JButton();
         butonActualizare = new javax.swing.JButton();
         butonAnulare = new javax.swing.JButton();
+        jLabelReclame = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemOpen = new javax.swing.JMenuItem();
@@ -251,21 +308,20 @@ public class AgendaUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelReclame, javax.swing.GroupLayout.PREFERRED_SIZE, 727, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(butonAdauga, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                        .addComponent(butonAdauga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(butonSalavare, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                        .addComponent(butonSalavare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(butonStergere, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                        .addComponent(butonStergere, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(butonActualizare, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                        .addComponent(butonActualizare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(butonAnulare, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                        .addComponent(butonAnulare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(262, 262, 262))
                     .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,7 +337,9 @@ public class AgendaUI extends javax.swing.JFrame {
                     .addComponent(butonStergere)
                     .addComponent(butonActualizare)
                     .addComponent(butonAnulare))
-                .addGap(23, 23, 23))
+                .addGap(18, 18, 18)
+                .addComponent(jLabelReclame, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -347,6 +405,7 @@ public class AgendaUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelNrTel;
     private javax.swing.JLabel jLabelNume;
     private javax.swing.JLabel jLabelPrenume;
+    private javax.swing.JLabel jLabelReclame;
     private javax.swing.JMenu jMenuAbonati;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuFile;
@@ -377,4 +436,5 @@ public class AgendaUI extends javax.swing.JFrame {
         System.out.println(abonati);
 
     }
+
 }
