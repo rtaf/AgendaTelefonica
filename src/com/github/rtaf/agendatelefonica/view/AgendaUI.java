@@ -47,6 +47,8 @@ public class AgendaUI extends javax.swing.JFrame {
     //index and randomGenerator to pick one picture with the timer
     int index;
     private final Random randomGenerator;
+    
+    private boolean isAppFull = false;
 
     // filter to identify images based on their extensions
     static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
@@ -67,6 +69,8 @@ public class AgendaUI extends javax.swing.JFrame {
      */
     public AgendaUI() throws InterruptedException {
         initComponents();
+        jMenuItemOpen.setEnabled(isAppFull);
+        jMenuItemSave.setEnabled(isAppFull);
         DisableTextFieldsUI();
         adaugareInTabelAbonati();
 
@@ -123,6 +127,7 @@ public class AgendaUI extends javax.swing.JFrame {
         listaAbonati.add(a1);
         modelTabelAbonati = new ModelTabelAbonat(listaAbonati);
         jTableAbonati.setModel(modelTabelAbonati);
+        jTableAbonati.setAutoCreateRowSorter(true);
     }
 
     /**
@@ -291,6 +296,11 @@ public class AgendaUI extends javax.swing.JFrame {
         jMenuHelp.setText("Help");
 
         jMenuItemInregistrare.setText("Inregistrare");
+        jMenuItemInregistrare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemInregistrareActionPerformed(evt);
+            }
+        });
         jMenuHelp.add(jMenuItemInregistrare);
         jMenuHelp.add(jSeparator2);
 
@@ -381,6 +391,20 @@ public class AgendaUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Selectie goala");
         }
     }//GEN-LAST:event_butonStergereActionPerformed
+
+    private void jMenuItemInregistrareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemInregistrareActionPerformed
+             String input = JOptionPane.showInputDialog(null, "Introduceti codul:", "Activare aplicatie",
+        JOptionPane.WARNING_MESSAGE);
+             if(input.equals("activ123")) {
+                 isAppFull = true;
+                 jMenuItemInregistrare.setEnabled(!isAppFull);
+                 jMenuItemOpen.setEnabled(isAppFull);
+                 jMenuItemSave.setEnabled(isAppFull);
+                JOptionPane.showMessageDialog(null, "Aplicatie inregistrata.");
+             } else {
+                     JOptionPane.showMessageDialog(null, "Cod incorect.");
+             }
+    }//GEN-LAST:event_jMenuItemInregistrareActionPerformed
 
     private void cleanFieldsAfterAdd() {
         textNume.setText("");
