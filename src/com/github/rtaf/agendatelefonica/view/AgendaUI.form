@@ -117,7 +117,7 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="butonStergere" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="butonActualizare" max="32767" attributes="0"/>
+                      <Component id="butonModificare" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="butonAnulare" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="262" max="-2" attributes="0"/>
@@ -140,7 +140,7 @@
                   <Component id="butonAdauga" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="butonSalavare" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="butonStergere" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="butonActualizare" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="butonModificare" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="butonAnulare" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -288,10 +288,13 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butonStergereActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="butonActualizare">
+    <Component class="javax.swing.JButton" name="butonModificare">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Actualizare"/>
+        <Property name="text" type="java.lang.String" value="Modificare"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butonModificareActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="butonAnulare">
       <Properties>

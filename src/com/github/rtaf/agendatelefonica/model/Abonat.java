@@ -5,11 +5,13 @@
  */
 package com.github.rtaf.agendatelefonica.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author rtafuni
  */
-public class Abonat {
+public class Abonat implements Serializable {
 
     private String nume;
     private String prenume;

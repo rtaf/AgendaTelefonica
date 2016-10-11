@@ -156,7 +156,7 @@ public class AgendaUI extends javax.swing.JFrame {
         butonAdauga = new javax.swing.JButton();
         butonSalavare = new javax.swing.JButton();
         butonStergere = new javax.swing.JButton();
-        butonActualizare = new javax.swing.JButton();
+        butonModificare = new javax.swing.JButton();
         butonAnulare = new javax.swing.JButton();
         jLabelReclame = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -262,7 +262,12 @@ public class AgendaUI extends javax.swing.JFrame {
             }
         });
 
-        butonActualizare.setText("Actualizare");
+        butonModificare.setText("Modificare");
+        butonModificare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonModificareActionPerformed(evt);
+            }
+        });
 
         butonAnulare.setText("Anulare");
 
@@ -334,7 +339,7 @@ public class AgendaUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(butonStergere, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(butonActualizare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(butonModificare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(butonAnulare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(262, 262, 262))
@@ -353,7 +358,7 @@ public class AgendaUI extends javax.swing.JFrame {
                     .addComponent(butonAdauga)
                     .addComponent(butonSalavare)
                     .addComponent(butonStergere)
-                    .addComponent(butonActualizare)
+                    .addComponent(butonModificare)
                     .addComponent(butonAnulare))
                 .addGap(18, 18, 18)
                 .addComponent(jLabelReclame, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -399,7 +404,11 @@ public class AgendaUI extends javax.swing.JFrame {
         Abonat abonatSalvat = new Abonat(nume, prenume, cnp, numarTelefon);
 
         controllerCarteDeTelefon.adaugaAbonat(abonatSalvat);
+        try {
+            controllerCarteDeTelefon.saveToFile();
+        } catch (Exception e) {
 
+        }
         saveToDatabase();
 
 
@@ -435,6 +444,17 @@ public class AgendaUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItemIesireActionPerformed
 
+    private void butonModificareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonModificareActionPerformed
+        int selectedRow = jTableAbonati.getSelectedRow();
+        if (selectedRow != -1) {
+            //controllerCarteDeTelefon.stergeAbonatSelectat(selectedRow);
+            EnableTextFieldsUI();
+            controllerCarteDeTelefon.modificaAbonatSelectat(selectedRow);
+        } else {
+            JOptionPane.showMessageDialog(null, "Selectie goala");
+        }
+    }//GEN-LAST:event_butonModificareActionPerformed
+
     public void cleanFieldsAfterAdd() {
         textNume.setText("");
         textPrenume.setText("");
@@ -449,9 +469,9 @@ public class AgendaUI extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton butonActualizare;
     private javax.swing.JButton butonAdauga;
     private javax.swing.JButton butonAnulare;
+    private javax.swing.JButton butonModificare;
     private javax.swing.JButton butonSalavare;
     private javax.swing.JButton butonStergere;
     private javax.swing.JLabel jLabelCNP;

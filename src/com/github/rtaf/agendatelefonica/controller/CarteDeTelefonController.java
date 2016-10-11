@@ -10,6 +10,13 @@ import com.github.rtaf.agendatelefonica.model.CarteDeTelefon;
 import com.github.rtaf.agendatelefonica.model.ModelTabelAbonat;
 import com.github.rtaf.agendatelefonica.view.AgendaUI;
 import com.github.rtaf.agendatelefonica.view.SplashScreen;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -46,6 +53,28 @@ public class CarteDeTelefonController {
     public void stergeAbonatSelectat(int numarAbonat) {
         modelCarteDeTelefon.stergeAbonatSelectat(numarAbonat);
 
+    }
+
+    public void modificaAbonatSelectat(int numarAbonat) {
+        modelCarteDeTelefon.modificaAbonatSelectat(numarAbonat);
+
+    }
+
+    /**
+     *
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public void saveToFile() throws FileNotFoundException, IOException {
+        //path to the pictures directory; used for slide show
+        Path path = Paths.get("serialized");
+        Path absolutePath = path.toAbsolutePath();
+        System.out.println(absolutePath);
+        File f;
+        f = new File(absolutePath+"/save.dat");
+        try (FileOutputStream fos = new FileOutputStream(f); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(modelCarteDeTelefon);
+        }
     }
 
 }

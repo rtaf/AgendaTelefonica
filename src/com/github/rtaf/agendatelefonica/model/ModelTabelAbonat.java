@@ -5,6 +5,7 @@
  */
 package com.github.rtaf.agendatelefonica.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -13,7 +14,7 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author rtafuni
  */
-public class ModelTabelAbonat extends AbstractTableModel {
+public class ModelTabelAbonat extends AbstractTableModel implements Serializable {
 
     private final List<Abonat> listAbonati;
     private final String[] titluColoane = {"Id", "Nume", "Prenume", "CNP", "Telefon"};
