@@ -9,6 +9,7 @@ import com.github.rtaf.agendatelefonica.model.Abonat;
 import com.github.rtaf.agendatelefonica.model.CarteDeTelefon;
 import com.github.rtaf.agendatelefonica.model.ModelTabelAbonat;
 import com.github.rtaf.agendatelefonica.view.AgendaUI;
+import com.github.rtaf.agendatelefonica.view.SplashScreen;
 
 /**
  *
@@ -18,10 +19,12 @@ public class CarteDeTelefonController {
 
     private final CarteDeTelefon modelCarteDeTelefon;
     private final AgendaUI agenda;
+    private final SplashScreen splashScreen;
 
     public CarteDeTelefonController(CarteDeTelefon modelCarteDeTelefon) {
         this.modelCarteDeTelefon = modelCarteDeTelefon;
         agenda = new AgendaUI(this);
+        splashScreen = new SplashScreen();
     }
 
     public void adaugaAbonat(Abonat abonatDeAgaugat) {
@@ -33,7 +36,10 @@ public class CarteDeTelefonController {
         return modelCarteDeTelefon.getModelTabelAbonat();
     }
 
-    public void init() {
+    public void init() throws InterruptedException {
+        splashScreen.setVisible(true);
+        Thread.sleep(4000);
+        splashScreen.dispose();
         agenda.setVisible(true);
     }
 

@@ -8,12 +8,8 @@ package com.github.rtaf.agendatelefonica;
 import com.github.rtaf.agendatelefonica.controller.CarteDeTelefonController;
 import com.github.rtaf.agendatelefonica.model.CarteDeTelefon;
 import com.github.rtaf.agendatelefonica.view.AgendaUI;
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.midi.ControllerEventListener;
 
 /**
  *
@@ -50,11 +46,16 @@ public class AgendaTelefonica {
 
         CarteDeTelefon model = new CarteDeTelefon();
         CarteDeTelefonController controller = new CarteDeTelefonController(model);
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                controller.init();
+                try {
+                    controller.init();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(AgendaTelefonica.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
