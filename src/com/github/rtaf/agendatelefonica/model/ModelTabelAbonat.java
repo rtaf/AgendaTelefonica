@@ -22,15 +22,7 @@ public class ModelTabelAbonat extends AbstractTableModel {
         listAbonati = abonati;
     }
 
-    public void addAbonat(Abonat abonat) {
-        listAbonati.add(abonat);
-        fireTableDataChanged();
-    }
-
-    public void removeAbonat(Abonat abonat) {
-        if (listAbonati.contains(abonat)) {
-            listAbonati.remove(abonat);
-        }
+    public void notificareDateSchimbateInModel() {
         fireTableDataChanged();
     }
 

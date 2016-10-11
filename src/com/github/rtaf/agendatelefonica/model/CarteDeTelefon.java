@@ -5,10 +5,52 @@
  */
 package com.github.rtaf.agendatelefonica.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author rtafuni
  */
 public class CarteDeTelefon {
-    
+
+    List<Abonat> listaAbonati;
+    ModelTabelAbonat modelTabelAbonat;
+
+    public CarteDeTelefon() {
+        listaAbonati = new ArrayList<>();
+        modelTabelAbonat = new ModelTabelAbonat(listaAbonati);
+    }
+
+    public List<Abonat> getListaAbonati() {
+        return listaAbonati;
+    }
+
+    public void setListaAbonati(List<Abonat> listaAbonati) {
+        this.listaAbonati = listaAbonati;
+    }
+
+    public ModelTabelAbonat getModelTabelAbonat() {
+        return modelTabelAbonat;
+    }
+
+    public void setModelTabelAbonat(ModelTabelAbonat modelTabelAbonat) {
+        this.modelTabelAbonat = modelTabelAbonat;
+    }
+
+    public int getNumarAbonati() {
+        return modelTabelAbonat.getRowCount();
+    }
+
+    public void adaugaAbonat(Abonat abonatDeAdaugat) {
+        listaAbonati.add(abonatDeAdaugat);
+        modelTabelAbonat.notificareDateSchimbateInModel();
+
+    }
+
+    public void stergeAbonatSelectat(int numarAbonat) {
+        listaAbonati.remove(numarAbonat);
+        modelTabelAbonat.notificareDateSchimbateInModel();
+    }
+
 }

@@ -5,8 +5,11 @@
  */
 package com.github.rtaf.agendatelefonica.view;
 
+import com.github.rtaf.agendatelefonica.controller.CarteDeTelefonController;
 import com.github.rtaf.agendatelefonica.model.Abonat;
+import com.github.rtaf.agendatelefonica.model.CarteDeTelefon;
 import com.github.rtaf.agendatelefonica.model.ModelTabelAbonat;
+import com.github.rtaf.agendatelefonica.model.NumarFix;
 import com.github.rtaf.agendatelefonica.model.NumarMobil;
 import com.github.rtaf.agendatelefonica.model.NumarTelefon;
 import java.io.File;
@@ -27,7 +30,7 @@ import javax.swing.JOptionPane;
  */
 public class AgendaUI extends javax.swing.JFrame {
 
-    ModelTabelAbonat modelTabelAbonati;
+    private ModelTabelAbonat modelTabelAbonati;
     Timer timerReclame;
 
     //path to the pictures directory; used for slide show
@@ -47,8 +50,10 @@ public class AgendaUI extends javax.swing.JFrame {
     //index and randomGenerator to pick one picture with the timer
     int index;
     private final Random randomGenerator;
-    
+
     private boolean isAppFull = false;
+
+    private CarteDeTelefonController controllerCarteDeTelefon;
 
     // filter to identify images based on their extensions
     static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
@@ -66,13 +71,17 @@ public class AgendaUI extends javax.swing.JFrame {
 
     /**
      * Creates new form AgendaUI
+     *
+     * @param carteDeTelefonController
+     * @throws java.lang.InterruptedException
      */
-    public AgendaUI() throws InterruptedException {
+    public AgendaUI(CarteDeTelefonController carteDeTelefonController) {
         initComponents();
+        controllerCarteDeTelefon = carteDeTelefonController;
         jMenuItemOpen.setEnabled(isAppFull);
         jMenuItemSave.setEnabled(isAppFull);
-        DisableTextFieldsUI();
-        adaugareInTabelAbonati();
+        disableTextFieldsUI();
+        initializareModelTabelAbonati();
 
         randomGenerator = new Random();
         if (dir.isDirectory()) { // make sure it's a directory
@@ -111,21 +120,15 @@ public class AgendaUI extends javax.swing.JFrame {
     /**
      * disables text fields from UI
      */
-    void DisableTextFieldsUI() {
+    private void disableTextFieldsUI() {
         textNume.setEnabled(false);
         textPrenume.setEnabled(false);
         textCNP.setEnabled(false);
         textNrTel.setEnabled(false);
     }
 
-    void adaugareInTabelAbonati() {
-        String[] numeColoane = {"ID", "Nume", "Prenume", "CNP", "NrTel"};
-        NumarTelefon tel = new NumarMobil("0755775775");
-
-        Abonat a1 = new Abonat("Ion", "Popescu", "1778845878787", tel);
-        List<Abonat> listaAbonati = new ArrayList<>();
-        listaAbonati.add(a1);
-        modelTabelAbonati = new ModelTabelAbonat(listaAbonati);
+    private void initializareModelTabelAbonati() {
+        modelTabelAbonati = controllerCarteDeTelefon.getModelTabelAbonat();
         jTableAbonati.setModel(modelTabelAbonati);
         jTableAbonati.setAutoCreateRowSorter(true);
     }
@@ -273,6 +276,11 @@ public class AgendaUI extends javax.swing.JFrame {
         jMenuFile.add(jSeparator1);
 
         jMenuItemIesire.setText("Iesire");
+        jMenuItemIesire.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemIesireActionPerformed(evt);
+            }
+        });
         jMenuFile.add(jMenuItemIesire);
 
         jMenuBar1.add(jMenuFile);
@@ -367,13 +375,30 @@ public class AgendaUI extends javax.swing.JFrame {
         String cnp = textCNP.getText();
         String telefon = textNrTel.getText();
 
-        NumarTelefon numarTelefon = new NumarMobil(telefon);
+        if (nume.length() == 0 || prenume.length() == 0) {
+            JOptionPane.showMessageDialog(null, "Nume si prenume lipsa");
+            throw new RuntimeException("Nume si prenume lipsa");
+        }
+
+        if (cnp.length() != 13) {
+            JOptionPane.showMessageDialog(null, "CNP Invalid");
+            throw new RuntimeException("CNP Invalid");
+        }
+
+        NumarTelefon numarTelefon = null;
+
+        if (telefon.length() == 10 && (telefon.startsWith("07"))) {
+            numarTelefon = new NumarMobil(telefon);
+        } else if (telefon.length() == 10 && (telefon.startsWith("02"))) {
+            numarTelefon = new NumarFix(telefon);
+        } else {
+            JOptionPane.showMessageDialog(null, "Numar telefon invalid");
+            throw new RuntimeException("Numar telefon invalid");
+        }
+
         Abonat abonatSalvat = new Abonat(nume, prenume, cnp, numarTelefon);
 
-        modelTabelAbonati.addAbonat(abonatSalvat);
-        jTableAbonati.setModel(modelTabelAbonati);
-
-        cleanFieldsAfterAdd();
+        controllerCarteDeTelefon.adaugaAbonat(abonatSalvat);
 
         saveToDatabase();
 
@@ -381,32 +406,36 @@ public class AgendaUI extends javax.swing.JFrame {
     }//GEN-LAST:event_butonSalavareActionPerformed
 
     private void butonStergereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonStergereActionPerformed
-        Object source = evt.getSource();
-
         int selectedRow = jTableAbonati.getSelectedRow();
         if (selectedRow != -1) {
-            ModelTabelAbonat model = (ModelTabelAbonat) jTableAbonati.getModel();
-            model.removeAbonat(model.getAbonat(selectedRow));
+            controllerCarteDeTelefon.stergeAbonatSelectat(selectedRow);
         } else {
             JOptionPane.showMessageDialog(null, "Selectie goala");
         }
     }//GEN-LAST:event_butonStergereActionPerformed
 
     private void jMenuItemInregistrareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemInregistrareActionPerformed
-             String input = JOptionPane.showInputDialog(null, "Introduceti codul:", "Activare aplicatie",
-        JOptionPane.WARNING_MESSAGE);
-             if(input.equals("activ123")) {
-                 isAppFull = true;
-                 jMenuItemInregistrare.setEnabled(!isAppFull);
-                 jMenuItemOpen.setEnabled(isAppFull);
-                 jMenuItemSave.setEnabled(isAppFull);
-                JOptionPane.showMessageDialog(null, "Aplicatie inregistrata.");
-             } else {
-                     JOptionPane.showMessageDialog(null, "Cod incorect.");
-             }
+        String input = JOptionPane.showInputDialog(null, "Introduceti codul:", "Activare aplicatie",
+                JOptionPane.WARNING_MESSAGE);
+        if (input.equals("activ123")) {
+            isAppFull = true;
+            jMenuItemInregistrare.setEnabled(!isAppFull);
+            jMenuItemOpen.setEnabled(isAppFull);
+            jMenuItemSave.setEnabled(isAppFull);
+            JOptionPane.showMessageDialog(null, "Aplicatie inregistrata.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Cod incorect.");
+        }
     }//GEN-LAST:event_jMenuItemInregistrareActionPerformed
 
-    private void cleanFieldsAfterAdd() {
+    private void jMenuItemIesireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemIesireActionPerformed
+        int result = JOptionPane.showConfirmDialog(null, "Confirmati iesirea?", "Iesire aplicatie", JOptionPane.YES_NO_OPTION);
+        if (result == 0) {
+            System.exit(0);
+        }
+    }//GEN-LAST:event_jMenuItemIesireActionPerformed
+
+    public void cleanFieldsAfterAdd() {
         textNume.setText("");
         textPrenume.setText("");
         textCNP.setText("");
