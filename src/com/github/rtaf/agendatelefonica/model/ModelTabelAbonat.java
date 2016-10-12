@@ -14,10 +14,10 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author rtafuni
  */
-public class ModelTabelAbonat extends AbstractTableModel implements Serializable {
+public class ModelTabelAbonat extends AbstractTableModel {
 
-    private final List<Abonat> listAbonati;
-    private final String[] titluColoane = {"Id", "Nume", "Prenume", "CNP", "Telefon"};
+    private List<Abonat> listAbonati;
+    private final String[] titluColoane = {"Nume", "Prenume", "CNP", "Telefon"};
 
     public ModelTabelAbonat(List<Abonat> abonati) {
         listAbonati = abonati;
@@ -57,7 +57,7 @@ public class ModelTabelAbonat extends AbstractTableModel implements Serializable
 
     @Override
     public boolean isCellEditable(int row, int col) {
-        return col > 0;
+        return false;
     }
 
     @Override
@@ -66,18 +66,15 @@ public class ModelTabelAbonat extends AbstractTableModel implements Serializable
 
         switch (col) {
             case 0:
-                abonat.getNume();
-                break;
-            case 1:
                 abonat.setNume(String.valueOf(value));
                 break;
-            case 2:
+            case 1:
                 abonat.setPrenume(String.valueOf(value));
                 break;
-            case 3:
+            case 2:
                 abonat.setCnp((String) value);
                 break;
-            case 4:
+            case 3:
                 abonat.setTelefon(new NumarMobil((String) value));
                 break;
             default:
@@ -98,16 +95,19 @@ public class ModelTabelAbonat extends AbstractTableModel implements Serializable
             case 0:
                 return abonat.getNume();
             case 1:
-                return abonat.getNume();
-            case 2:
                 return abonat.getPrenume();
-            case 3:
+            case 2:
                 return abonat.getCnp();
-            case 4:
+            case 3:
                 return abonat.getTelefon();
             default:
                 return null;
         }
+    }
+
+    public void setInputDataFrom(List<Abonat> loadDatabaseFromFile) {
+        listAbonati = loadDatabaseFromFile;
+        notificareDateSchimbateInModel();
     }
 
 }

@@ -7,7 +7,6 @@ package com.github.rtaf.agendatelefonica.view;
 
 import com.github.rtaf.agendatelefonica.controller.CarteDeTelefonController;
 import com.github.rtaf.agendatelefonica.model.Abonat;
-import com.github.rtaf.agendatelefonica.model.CarteDeTelefon;
 import com.github.rtaf.agendatelefonica.model.ModelTabelAbonat;
 import com.github.rtaf.agendatelefonica.model.NumarFix;
 import com.github.rtaf.agendatelefonica.model.NumarMobil;
@@ -22,7 +21,11 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -82,6 +85,7 @@ public class AgendaUI extends javax.swing.JFrame {
         jMenuItemSave.setEnabled(isAppFull);
         disableTextFieldsUI();
         initializareModelTabelAbonati();
+        listenToTableSelection();
 
         randomGenerator = new Random();
         if (dir.isDirectory()) { // make sure it's a directory
@@ -274,9 +278,19 @@ public class AgendaUI extends javax.swing.JFrame {
         jMenuFile.setText("File");
 
         jMenuItemOpen.setText("Open");
+        jMenuItemOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemOpenActionPerformed(evt);
+            }
+        });
         jMenuFile.add(jMenuItemOpen);
 
         jMenuItemSave.setText("Save");
+        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSaveActionPerformed(evt);
+            }
+        });
         jMenuFile.add(jMenuItemSave);
         jMenuFile.add(jSeparator1);
 
@@ -390,25 +404,11 @@ public class AgendaUI extends javax.swing.JFrame {
             throw new RuntimeException("CNP Invalid");
         }
 
-        NumarTelefon numarTelefon = null;
-
-        if (telefon.length() == 10 && (telefon.startsWith("07"))) {
-            numarTelefon = new NumarMobil(telefon);
-        } else if (telefon.length() == 10 && (telefon.startsWith("02"))) {
-            numarTelefon = new NumarFix(telefon);
-        } else {
-            JOptionPane.showMessageDialog(null, "Numar telefon invalid");
-            throw new RuntimeException("Numar telefon invalid");
-        }
+        NumarTelefon numarTelefon = getNumarTelefonFromString(telefon);
 
         Abonat abonatSalvat = new Abonat(nume, prenume, cnp, numarTelefon);
 
         controllerCarteDeTelefon.adaugaAbonat(abonatSalvat);
-        try {
-            controllerCarteDeTelefon.saveToFile();
-        } catch (Exception e) {
-
-        }
         saveToDatabase();
 
 
@@ -446,14 +446,39 @@ public class AgendaUI extends javax.swing.JFrame {
 
     private void butonModificareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonModificareActionPerformed
         int selectedRow = jTableAbonati.getSelectedRow();
+        Abonat abonatVechi = modelTabelAbonati.getAbonat(selectedRow);
         if (selectedRow != -1) {
-            //controllerCarteDeTelefon.stergeAbonatSelectat(selectedRow);
-            EnableTextFieldsUI();
-            controllerCarteDeTelefon.modificaAbonatSelectat(selectedRow);
+            controllerCarteDeTelefon.modificaAbonatSelectat(abonatVechi);
         } else {
             JOptionPane.showMessageDialog(null, "Selectie goala");
         }
     }//GEN-LAST:event_butonModificareActionPerformed
+
+    private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        int returnVal = fc.showSaveDialog(null);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            controllerCarteDeTelefon.saveToFile(file);
+            //This is where a real application would open the file.
+        }
+
+
+    }//GEN-LAST:event_jMenuItemSaveActionPerformed
+
+    private void jMenuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOpenActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        int returnVal = fc.showOpenDialog(null);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            List<Abonat> loadDatabaseFromFile = controllerCarteDeTelefon.loadDatabaseFromFile(file);
+            System.out.println(loadDatabaseFromFile);
+            modelTabelAbonati.setInputDataFrom(loadDatabaseFromFile);
+            //This is where a real application would open the file.
+        }
+    }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
     public void cleanFieldsAfterAdd() {
         textNume.setText("");
@@ -508,6 +533,49 @@ public class AgendaUI extends javax.swing.JFrame {
         List<Abonat> abonati = model.getAbonati();
         System.out.println(abonati);
 
+    }
+
+    private void listenToTableSelection() {
+        ListSelectionModel cellSelectionModel = jTableAbonati.getSelectionModel();
+        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                int selectedRow = jTableAbonati.getSelectedRow();
+                Abonat abonatSelectat = modelTabelAbonati.getAbonat(selectedRow);
+                EnableTextFieldsUI();
+                textNume.setText(abonatSelectat.getNume());
+                textPrenume.setText(abonatSelectat.getPrenume());
+                textCNP.setText(abonatSelectat.getCnp());
+                textNrTel.setText(abonatSelectat.getTelefon().toString());
+
+            }
+        });
+
+    }
+
+    public Abonat getAbonatFromFields() {
+        String nume = textNume.getText();
+        String prenume = textPrenume.getText();
+        String cnp = textCNP.getText();
+        String telefon = textNrTel.getText();
+
+        Abonat abonatNou = new Abonat(nume, prenume, cnp, getNumarTelefonFromString(telefon));
+        return abonatNou;
+    }
+
+    private NumarTelefon getNumarTelefonFromString(String telefon) {
+        NumarTelefon numarTelefon = null;
+
+        if (telefon.length() == 10 && (telefon.startsWith("07"))) {
+            numarTelefon = new NumarMobil(telefon);
+        } else if (telefon.length() == 10 && (telefon.startsWith("02"))) {
+            numarTelefon = new NumarFix(telefon);
+        } else {
+            JOptionPane.showMessageDialog(null, "Numar telefon invalid");
+            throw new RuntimeException("Numar telefon invalid");
+        }
+        return numarTelefon;
     }
 
 }

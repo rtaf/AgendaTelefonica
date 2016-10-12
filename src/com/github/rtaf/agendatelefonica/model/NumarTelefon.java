@@ -5,11 +5,13 @@
  */
 package com.github.rtaf.agendatelefonica.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author rtafuni
  */
-public abstract class NumarTelefon {
+public abstract class NumarTelefon implements Serializable{
 
     private String numarTelefon;
 

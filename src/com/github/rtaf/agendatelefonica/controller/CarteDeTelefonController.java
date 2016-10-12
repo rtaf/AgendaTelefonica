@@ -11,12 +11,17 @@ import com.github.rtaf.agendatelefonica.model.ModelTabelAbonat;
 import com.github.rtaf.agendatelefonica.view.AgendaUI;
 import com.github.rtaf.agendatelefonica.view.SplashScreen;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -55,26 +60,28 @@ public class CarteDeTelefonController {
 
     }
 
-    public void modificaAbonatSelectat(int numarAbonat) {
-        modelCarteDeTelefon.modificaAbonatSelectat(numarAbonat);
+    public void modificaAbonatSelectat(Abonat abonatSelectat) {
+        Abonat abonatFromFields = agenda.getAbonatFromFields();
+        modelCarteDeTelefon.modificaAbonatSelectat(abonatSelectat, abonatFromFields);
 
     }
 
-    /**
-     *
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public void saveToFile() throws FileNotFoundException, IOException {
-        //path to the pictures directory; used for slide show
-        Path path = Paths.get("serialized");
-        Path absolutePath = path.toAbsolutePath();
-        System.out.println(absolutePath);
-        File f;
-        f = new File(absolutePath+"/save.dat");
-        try (FileOutputStream fos = new FileOutputStream(f); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(modelCarteDeTelefon);
+    public void saveToFile(File fileToSave) {
+        try (FileOutputStream fos = new FileOutputStream(fileToSave); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(modelCarteDeTelefon.getListaAbonati());
+        } catch (IOException ex) {
+            Logger.getLogger(CarteDeTelefonController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    public List<Abonat> loadDatabaseFromFile(File fileToLoad) {
+        List<Abonat> listaIncarcata = null;
+        try (FileInputStream fis = new FileInputStream(fileToLoad); ObjectInputStream ois = new ObjectInputStream(fis)) {
+            listaIncarcata = (List<Abonat>) ois.readObject();
+        } catch (ClassNotFoundException | IOException ex) {
+            Logger.getLogger(CarteDeTelefonController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listaIncarcata;
+
+    }
 }

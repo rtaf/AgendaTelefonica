@@ -5,7 +5,6 @@
  */
 package com.github.rtaf.agendatelefonica.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  *
  * @author rtafuni
  */
-public class CarteDeTelefon implements Serializable {
+public class CarteDeTelefon {
 
     List<Abonat> listaAbonati;
     ModelTabelAbonat modelTabelAbonat;
@@ -55,6 +54,12 @@ public class CarteDeTelefon implements Serializable {
     }
 
     public void modificaAbonatSelectat(int numarAbonat) {
+        modelTabelAbonat.notificareDateSchimbateInModel();
+    }
+
+    public void modificaAbonatSelectat(Abonat abonatSelectat, Abonat abonatFromFields) {
+        int positionOfAbonat = listaAbonati.indexOf(abonatSelectat);
+        listaAbonati.set(positionOfAbonat, abonatFromFields);
         modelTabelAbonat.notificareDateSchimbateInModel();
     }
 
