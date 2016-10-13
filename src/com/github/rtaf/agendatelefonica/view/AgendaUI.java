@@ -24,8 +24,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -56,7 +61,9 @@ public class AgendaUI extends javax.swing.JFrame {
 
     private boolean isAppFull = false;
 
-    private CarteDeTelefonController controllerCarteDeTelefon;
+    private final TableRowSorter<TableModel> rowSorter;
+
+    private final CarteDeTelefonController controllerCarteDeTelefon;
 
     // filter to identify images based on their extensions
     static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
@@ -79,6 +86,7 @@ public class AgendaUI extends javax.swing.JFrame {
      * @throws java.lang.InterruptedException
      */
     public AgendaUI(CarteDeTelefonController carteDeTelefonController) {
+
         initComponents();
         controllerCarteDeTelefon = carteDeTelefonController;
         jMenuItemOpen.setEnabled(isAppFull);
@@ -108,6 +116,39 @@ public class AgendaUI extends javax.swing.JFrame {
 
         };
         t.schedule(task, 0, 5000);
+
+        this.rowSorter = new TableRowSorter<>(jTableAbonati.getModel());
+        jTableAbonati.setRowSorter(rowSorter);
+        jTextFilter.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = jTextFilter.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = jTextFilter.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
     }
 
     /**
@@ -163,6 +204,8 @@ public class AgendaUI extends javax.swing.JFrame {
         butonModificare = new javax.swing.JButton();
         butonAnulare = new javax.swing.JButton();
         jLabelReclame = new javax.swing.JLabel();
+        jButtonCautare = new javax.swing.JButton();
+        jTextFilter = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemOpen = new javax.swing.JMenuItem();
@@ -275,6 +318,8 @@ public class AgendaUI extends javax.swing.JFrame {
 
         butonAnulare.setText("Anulare");
 
+        jButtonCautare.setText("Cautare");
+
         jMenuFile.setText("File");
 
         jMenuItemOpen.setText("Open");
@@ -345,7 +390,6 @@ public class AgendaUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelReclame, javax.swing.GroupLayout.PREFERRED_SIZE, 727, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(butonAdauga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -358,7 +402,16 @@ public class AgendaUI extends javax.swing.JFrame {
                         .addComponent(butonAnulare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(262, 262, 262))
                     .addComponent(jScrollPane1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabelReclame, javax.swing.GroupLayout.PREFERRED_SIZE, 727, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonCautare)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFilter)
+                                .addGap(262, 262, 262)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -367,7 +420,11 @@ public class AgendaUI extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonCautare)
+                    .addComponent(jTextFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(butonAdauga)
                     .addComponent(butonSalavare)
@@ -499,6 +556,7 @@ public class AgendaUI extends javax.swing.JFrame {
     private javax.swing.JButton butonModificare;
     private javax.swing.JButton butonSalavare;
     private javax.swing.JButton butonStergere;
+    private javax.swing.JButton jButtonCautare;
     private javax.swing.JLabel jLabelCNP;
     private javax.swing.JLabel jLabelNrTel;
     private javax.swing.JLabel jLabelNume;
@@ -522,6 +580,7 @@ public class AgendaUI extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTable jTableAbonati;
+    private javax.swing.JTextField jTextFilter;
     private javax.swing.JTextField textCNP;
     private javax.swing.JTextField textNrTel;
     private javax.swing.JTextField textNume;
