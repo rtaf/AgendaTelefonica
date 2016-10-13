@@ -11,6 +11,7 @@ import com.github.rtaf.agendatelefonica.model.ModelTabelAbonat;
 import com.github.rtaf.agendatelefonica.model.NumarFix;
 import com.github.rtaf.agendatelefonica.model.NumarMobil;
 import com.github.rtaf.agendatelefonica.model.NumarTelefon;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.file.Path;
@@ -21,8 +22,11 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
@@ -126,8 +130,10 @@ public class AgendaUI extends javax.swing.JFrame {
                 String text = jTextFilter.getText();
 
                 if (text.trim().length() == 0) {
+                    jButtonCautare.setText("Filtru Inactiv");
                     rowSorter.setRowFilter(null);
                 } else {
+                    jButtonCautare.setText("Filtru Activ");
                     rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                 }
             }
@@ -137,8 +143,10 @@ public class AgendaUI extends javax.swing.JFrame {
                 String text = jTextFilter.getText();
 
                 if (text.trim().length() == 0) {
+                    jButtonCautare.setText("Filtru Inactiv");
                     rowSorter.setRowFilter(null);
                 } else {
+                    jButtonCautare.setText("Filtru Activ");
                     rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                 }
             }
@@ -317,8 +325,17 @@ public class AgendaUI extends javax.swing.JFrame {
         });
 
         butonAnulare.setText("Anulare");
+        butonAnulare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonAnulareActionPerformed(evt);
+            }
+        });
 
-        jButtonCautare.setText("Cautare");
+        jButtonCautare.setText("Filtru Inactiv");
+        jButtonCautare.setFocusPainted(false);
+        jButtonCautare.setFocusable(false);
+        jButtonCautare.setRequestFocusEnabled(false);
+        jButtonCautare.setVerifyInputWhenFocusTarget(false);
 
         jMenuFile.setText("File");
 
@@ -377,6 +394,11 @@ public class AgendaUI extends javax.swing.JFrame {
         jMenuHelp.add(jSeparator2);
 
         jMenuItemAbout.setText("About");
+        jMenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemAboutActionPerformed(evt);
+            }
+        });
         jMenuHelp.add(jMenuItemAbout);
 
         jMenuBar1.add(jMenuHelp);
@@ -536,6 +558,24 @@ public class AgendaUI extends javax.swing.JFrame {
             //This is where a real application would open the file.
         }
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
+
+    private void butonAnulareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAnulareActionPerformed
+        // TODO add your handling code here:
+        cleanFieldsAfterAdd();
+    }//GEN-LAST:event_butonAnulareActionPerformed
+
+    private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
+        // TODO add your handling code here:
+        JDialog dlg = new JDialog();
+        JTextArea textAreal = new JTextArea("     Tafuni Radu     \n email: rtafuni20@yahoo.com", 5, 10);
+        textAreal.setColumns(30);
+        textAreal.setLineWrap(true);
+        textAreal.setPreferredSize(new Dimension(100, 100));
+        dlg.add(textAreal);
+        dlg.setSize(300, 100);
+        dlg.setVisible(true);
+
+    }//GEN-LAST:event_jMenuItemAboutActionPerformed
 
     public void cleanFieldsAfterAdd() {
         textNume.setText("");
