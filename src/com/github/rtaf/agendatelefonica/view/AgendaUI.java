@@ -45,6 +45,7 @@ public class AgendaUI extends javax.swing.JFrame {
     private ModelTabelAbonat modelTabelAbonati;
     Timer timerReclame;
     Timer timerSavetoFile;
+    TimerTask taskSavetoFile;
 
     //path to the pictures directory; used for slide show
     Path path = Paths.get("pictures");
@@ -544,21 +545,23 @@ public class AgendaUI extends javax.swing.JFrame {
         final JFileChooser fc = new JFileChooser();
         int returnVal = fc.showSaveDialog(null);
 
-        TimerTask taskSavetoFile = new TimerTask() {
-            @Override
-            public void run() {
-                controllerCarteDeTelefon.saveToFile(file);
-                System.out.println("CarteDeTelefon salvata in fisier");
-            }
-
-        };
+        if (taskSavetoFile != null) {
+            timerSavetoFile.cancel();
+            timerSavetoFile.purge();
+        }
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            controllerCarteDeTelefon.saveToFile(file);           
-            timerSavetoFile.cancel();
-            timerSavetoFile.purge();
-            timerSavetoFile.schedule(taskSavetoFile, 0, 5000);
+            controllerCarteDeTelefon.saveToFile(file);
+            taskSavetoFile = new TimerTask() {
+                @Override
+                public void run() {
+                    controllerCarteDeTelefon.saveToFile(file);
+                    System.out.println("CarteDeTelefon salvata in fisier");
+                }
+
+            };
+            timerSavetoFile.schedule(taskSavetoFile, 0, 50000);
             //This is where a real application would open the file.
         }
 
