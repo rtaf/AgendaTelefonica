@@ -62,4 +62,30 @@ public class Abonat implements Serializable {
         return "Abonat{" + "nume=" + nume + ", prenume=" + prenume + ", cnp=" + cnp + ", telefon=" + telefon + '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o instanceof Abonat) {
+            Abonat abonatDeComparat = (Abonat) o;
+            if (!abonatDeComparat.nume.equals(this.nume)) {
+                return false;
+            }
+            if (!abonatDeComparat.prenume.equals(this.prenume)) {
+                return false;
+            }
+            if (!abonatDeComparat.cnp.equals(this.cnp)) {
+                return false;
+            }
+            if (!abonatDeComparat.telefon.toString().equals(this.telefon.toString())) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
 }
