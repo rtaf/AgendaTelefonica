@@ -5,8 +5,6 @@
  */
 package com.github.rtaf.agendatelefonica.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -25,14 +23,6 @@ public class ModelTabelAbonat extends AbstractTableModel {
 
     public void notificareDateSchimbateInModel() {
         fireTableDataChanged();
-    }
-
-    public Abonat getAbonat(int abonatPosition) {
-        return listAbonati.get(abonatPosition);
-    }
-
-    public List<Abonat> getAbonati() {
-        return new ArrayList<>(listAbonati);
     }
 
     @Override
@@ -80,11 +70,6 @@ public class ModelTabelAbonat extends AbstractTableModel {
             default:
 
         }
-
-        System.out.println("Setting value at " + row + "," + col
-                + " to " + value + " (an instance of "
-                + value.getClass() + ")");
-
         fireTableCellUpdated(row, col);
     }
 
@@ -105,8 +90,8 @@ public class ModelTabelAbonat extends AbstractTableModel {
         }
     }
 
-    public void setInputDataFrom(List<Abonat> loadDatabaseFromFile) {
-        listAbonati = loadDatabaseFromFile;
+    void setListaAbonati(List<Abonat> listaAbonati) {
+        this.listAbonati = listaAbonati;
         notificareDateSchimbateInModel();
     }
 

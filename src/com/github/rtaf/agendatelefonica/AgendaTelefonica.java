@@ -8,6 +8,8 @@ package com.github.rtaf.agendatelefonica;
 import com.github.rtaf.agendatelefonica.controller.CarteDeTelefonController;
 import com.github.rtaf.agendatelefonica.model.CarteDeTelefon;
 import com.github.rtaf.agendatelefonica.view.AgendaUI;
+import com.github.rtaf.agendatelefonica.view.SplashScreen;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,8 +21,9 @@ public class AgendaTelefonica {
 
     /**
      * @param args the command line arguments
+     * @throws java.lang.InterruptedException
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws InterruptedException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -44,9 +47,14 @@ public class AgendaTelefonica {
         }
         //</editor-fold>
 
+        SplashScreen splash = new SplashScreen();
+        splash.setVisible(true);
+        TimeUnit.SECONDS.sleep(4);
+        splash.dispose();
+
         CarteDeTelefon model = new CarteDeTelefon();
         CarteDeTelefonController controller = new CarteDeTelefonController(model);
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override

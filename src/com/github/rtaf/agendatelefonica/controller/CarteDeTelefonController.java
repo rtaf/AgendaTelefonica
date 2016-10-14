@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -29,46 +30,43 @@ import java.util.logging.Logger;
  */
 public class CarteDeTelefonController {
 
-    private final CarteDeTelefon modelCarteDeTelefon;
+    private final CarteDeTelefon carteDeTelefonModel;
     private final AgendaUI agenda;
-    private final SplashScreen splashScreen;
 
     public CarteDeTelefonController(CarteDeTelefon modelCarteDeTelefon) {
-        this.modelCarteDeTelefon = modelCarteDeTelefon;
+        this.carteDeTelefonModel = modelCarteDeTelefon;
+        loadDatabaseAtStartup();
         agenda = new AgendaUI(this);
-        splashScreen = new SplashScreen();
     }
 
+    private void loadDatabaseAtStartup() {
+        File file = new File("serialized/agenda1.txt");
+        carteDeTelefonModel.setListaAbonati(loadDatabaseFromFile(file));
+    }
+    
     public void adaugaAbonat(Abonat abonatDeAgaugat) {
-        modelCarteDeTelefon.adaugaAbonat(abonatDeAgaugat);
+        carteDeTelefonModel.adaugaAbonat(abonatDeAgaugat);
         agenda.cleanFieldsAfterAdd();
     }
 
-    public ModelTabelAbonat getModelTabelAbonat() {
-        return modelCarteDeTelefon.getModelTabelAbonat();
-    }
-
     public void init() throws InterruptedException {
-        splashScreen.setVisible(true);
-        Thread.sleep(4000);
-        splashScreen.dispose();
         agenda.setVisible(true);
     }
 
     public void stergeAbonatSelectat(int numarAbonat) {
-        modelCarteDeTelefon.stergeAbonatSelectat(numarAbonat);
+        carteDeTelefonModel.stergeAbonatSelectat(numarAbonat);
 
     }
 
     public void modificaAbonatSelectat(Abonat abonatSelectat) {
         Abonat abonatFromFields = agenda.getAbonatFromFields();
-        modelCarteDeTelefon.modificaAbonatSelectat(abonatSelectat, abonatFromFields);
+        carteDeTelefonModel.modificaAbonatSelectat(abonatSelectat, abonatFromFields);
 
     }
 
     public void saveToFile(File fileToSave) {
         try (FileOutputStream fos = new FileOutputStream(fileToSave); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(modelCarteDeTelefon.getListaAbonati());
+            oos.writeObject(carteDeTelefonModel.getListaAbonati());
         } catch (IOException ex) {
             Logger.getLogger(CarteDeTelefonController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -83,5 +81,17 @@ public class CarteDeTelefonController {
         }
         return listaIncarcata;
 
+    }
+
+    public void setModelInputDataFrom(List<Abonat> loadDatabaseFromFile) {
+        carteDeTelefonModel.setListaAbonati(loadDatabaseFromFile);
+    }
+
+    public Abonat getAbonatAtPosition(int selectedRow) {
+        return carteDeTelefonModel.getListaAbonati().get(selectedRow);
+    }
+
+    public TableModel getModelTabelAbonat() {
+        return carteDeTelefonModel.getModelTabelAbonat();
     }
 }

@@ -46,21 +46,25 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Adauga"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemAdaugaActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemStergere">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Stergere"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemStergereActionPerformed"/>
+              </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemActualizare">
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemModificare">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Actualizare"/>
+                <Property name="text" type="java.lang.String" value="Modificare"/>
               </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCauta">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Cauta"/>
-              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemModificareActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -136,7 +140,7 @@
                           <Component id="jLabelReclame" min="-2" pref="727" max="-2" attributes="0"/>
                           <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jButtonCautare" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelFiltru" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jTextFilter" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="262" max="-2" attributes="0"/>
@@ -157,8 +161,8 @@
               <Component id="jScrollPane1" min="-2" pref="141" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButtonCautare" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jTextFilter" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelFiltru" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -336,16 +340,15 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonCautare">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Filtru Inactiv"/>
-        <Property name="focusPainted" type="boolean" value="false"/>
-        <Property name="focusable" type="boolean" value="false"/>
-        <Property name="requestFocusEnabled" type="boolean" value="false"/>
-        <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JTextField" name="jTextFilter">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelFiltru">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="ff" id="green" palette="1" red="0" type="palette"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Filtru tabel inactiv"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

@@ -28,6 +28,7 @@ public class CarteDeTelefon {
 
     public void setListaAbonati(List<Abonat> listaAbonati) {
         this.listaAbonati = listaAbonati;
+        modelTabelAbonat.setListaAbonati(listaAbonati);
     }
 
     public ModelTabelAbonat getModelTabelAbonat() {
@@ -39,7 +40,7 @@ public class CarteDeTelefon {
     }
 
     public int getNumarAbonati() {
-        return modelTabelAbonat.getRowCount();
+        return listaAbonati.size();
     }
 
     public void adaugaAbonat(Abonat abonatDeAdaugat) {
@@ -50,10 +51,6 @@ public class CarteDeTelefon {
 
     public void stergeAbonatSelectat(int numarAbonat) {
         listaAbonati.remove(numarAbonat);
-        modelTabelAbonat.notificareDateSchimbateInModel();
-    }
-
-    public void modificaAbonatSelectat(int numarAbonat) {
         modelTabelAbonat.notificareDateSchimbateInModel();
     }
 

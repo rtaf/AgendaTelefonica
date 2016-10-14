@@ -5,6 +5,7 @@
  */
 package com.github.rtaf.agendatelefonica.view;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.ImageIcon;
@@ -17,9 +18,8 @@ import javax.swing.JLabel;
  */
 public class SplashScreen extends JFrame {
 
-    private final Path path = Paths.get("pictures/splash.jpg");
-    private final Path absolutePath = path.toAbsolutePath();
-    private final ImageIcon imagineSpashScreen = new ImageIcon(absolutePath.toString());
+    File file = new File("pictures/splash.jpg");
+    private final ImageIcon imagineSpashScreen = new ImageIcon(file.toString());
     private final JLabel labelImagineSpashScreen = new JLabel(imagineSpashScreen);
     private final JLabel labelAutor = new JLabel("Tafuni Radu");
 
@@ -32,10 +32,11 @@ public class SplashScreen extends JFrame {
         setLocationRelativeTo(null);
         setUndecorated(true);
         setLayout(null);
-        System.out.println(absolutePath);
+        labelImagineSpashScreen.setBounds(20, 20, 300, 187);
+        labelAutor.setBounds(215, 300, 150, 20);
         add(labelImagineSpashScreen);
         add(labelAutor);
-        labelAutor.setBounds(215, 210, 150, 20);
+
     }
 
 }

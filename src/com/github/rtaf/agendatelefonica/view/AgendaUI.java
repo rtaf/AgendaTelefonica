@@ -11,6 +11,7 @@ import com.github.rtaf.agendatelefonica.model.ModelTabelAbonat;
 import com.github.rtaf.agendatelefonica.model.NumarFix;
 import com.github.rtaf.agendatelefonica.model.NumarMobil;
 import com.github.rtaf.agendatelefonica.model.NumarTelefon;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -42,7 +43,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class AgendaUI extends javax.swing.JFrame {
 
-    private ModelTabelAbonat modelTabelAbonati;
+//    private ModelTabelAbonat modelTabelAbonati;
     Timer timerReclame;
     Timer timerSavetoFile;
     TimerTask taskSavetoFile;
@@ -106,7 +107,6 @@ public class AgendaUI extends javax.swing.JFrame {
         randomGenerator = new Random();
         if (dir.isDirectory()) { // make sure it's a directory
             for (final File f : dir.listFiles(IMAGE_FILTER)) {
-                System.out.println(f.getAbsolutePath());
                 iconList.add(new ImageIcon(f.getAbsolutePath()));
 
             }
@@ -118,7 +118,6 @@ public class AgendaUI extends javax.swing.JFrame {
             @Override
             public void run() {
                 index = randomGenerator.nextInt(iconList.size());
-                System.out.println(index);
                 jLabelReclame.setIcon(iconList.get(index));
             }
 
@@ -138,10 +137,12 @@ public class AgendaUI extends javax.swing.JFrame {
                 String text = jTextFilter.getText();
 
                 if (text.trim().length() == 0) {
-                    jButtonCautare.setText("Filtru Inactiv");
+                    jLabelFiltru.setText("Filtru Tabel Inactiv");
+                    jLabelFiltru.setBackground(Color.green);
                     rowSorter.setRowFilter(null);
                 } else {
-                    jButtonCautare.setText("Filtru Activ");
+                    jLabelFiltru.setText("Filtru Tabel Activ");
+                    jLabelFiltru.setBackground(Color.red);
                     rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                 }
             }
@@ -151,10 +152,12 @@ public class AgendaUI extends javax.swing.JFrame {
                 String text = jTextFilter.getText();
 
                 if (text.trim().length() == 0) {
-                    jButtonCautare.setText("Filtru Inactiv");
+                    jLabelFiltru.setText("Filtru Tabel Inactiv");
+                    jLabelFiltru.setBackground(Color.green);
                     rowSorter.setRowFilter(null);
                 } else {
-                    jButtonCautare.setText("Filtru Activ");
+                    jLabelFiltru.setText("Filtru Tabel Activ");
+                    jLabelFiltru.setBackground(Color.red);
                     rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                 }
             }
@@ -189,8 +192,7 @@ public class AgendaUI extends javax.swing.JFrame {
     }
 
     private void initializareModelTabelAbonati() {
-        modelTabelAbonati = controllerCarteDeTelefon.getModelTabelAbonat();
-        jTableAbonati.setModel(modelTabelAbonati);
+        jTableAbonati.setModel(controllerCarteDeTelefon.getModelTabelAbonat());
         jTableAbonati.setAutoCreateRowSorter(true);
     }
 
@@ -220,8 +222,8 @@ public class AgendaUI extends javax.swing.JFrame {
         butonModificare = new javax.swing.JButton();
         butonAnulare = new javax.swing.JButton();
         jLabelReclame = new javax.swing.JLabel();
-        jButtonCautare = new javax.swing.JButton();
         jTextFilter = new javax.swing.JTextField();
+        jLabelFiltru = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemOpen = new javax.swing.JMenuItem();
@@ -231,8 +233,7 @@ public class AgendaUI extends javax.swing.JFrame {
         jMenuAbonati = new javax.swing.JMenu();
         jMenuItemAdauga = new javax.swing.JMenuItem();
         jMenuItemStergere = new javax.swing.JMenuItem();
-        jMenuItemActualizare = new javax.swing.JMenuItem();
-        jMenuItemCauta = new javax.swing.JMenuItem();
+        jMenuItemModificare = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
         jMenuItemInregistrare = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
@@ -339,11 +340,8 @@ public class AgendaUI extends javax.swing.JFrame {
             }
         });
 
-        jButtonCautare.setText("Filtru Inactiv");
-        jButtonCautare.setFocusPainted(false);
-        jButtonCautare.setFocusable(false);
-        jButtonCautare.setRequestFocusEnabled(false);
-        jButtonCautare.setVerifyInputWhenFocusTarget(false);
+        jLabelFiltru.setBackground(java.awt.Color.green);
+        jLabelFiltru.setText("Filtru tabel inactiv");
 
         jMenuFile.setText("File");
 
@@ -377,16 +375,28 @@ public class AgendaUI extends javax.swing.JFrame {
         jMenuAbonati.setText("Abonati");
 
         jMenuItemAdauga.setText("Adauga");
+        jMenuItemAdauga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemAdaugaActionPerformed(evt);
+            }
+        });
         jMenuAbonati.add(jMenuItemAdauga);
 
         jMenuItemStergere.setText("Stergere");
+        jMenuItemStergere.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemStergereActionPerformed(evt);
+            }
+        });
         jMenuAbonati.add(jMenuItemStergere);
 
-        jMenuItemActualizare.setText("Actualizare");
-        jMenuAbonati.add(jMenuItemActualizare);
-
-        jMenuItemCauta.setText("Cauta");
-        jMenuAbonati.add(jMenuItemCauta);
+        jMenuItemModificare.setText("Modificare");
+        jMenuItemModificare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemModificareActionPerformed(evt);
+            }
+        });
+        jMenuAbonati.add(jMenuItemModificare);
 
         jMenuBar1.add(jMenuAbonati);
 
@@ -437,7 +447,7 @@ public class AgendaUI extends javax.swing.JFrame {
                             .addComponent(jLabelReclame, javax.swing.GroupLayout.PREFERRED_SIZE, 727, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButtonCautare)
+                                .addComponent(jLabelFiltru)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextFilter)
                                 .addGap(262, 262, 262)))
@@ -452,8 +462,8 @@ public class AgendaUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonCautare)
-                    .addComponent(jTextFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelFiltru))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(butonAdauga)
@@ -496,8 +506,6 @@ public class AgendaUI extends javax.swing.JFrame {
         Abonat abonatSalvat = new Abonat(nume, prenume, cnp, numarTelefon);
 
         controllerCarteDeTelefon.adaugaAbonat(abonatSalvat);
-        saveToDatabase();
-
 
     }//GEN-LAST:event_butonSalavareActionPerformed
 
@@ -533,7 +541,7 @@ public class AgendaUI extends javax.swing.JFrame {
 
     private void butonModificareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonModificareActionPerformed
         int selectedRow = jTableAbonati.getSelectedRow();
-        Abonat abonatVechi = modelTabelAbonati.getAbonat(selectedRow);
+        Abonat abonatVechi = controllerCarteDeTelefon.getAbonatAtPosition(selectedRow);
         if (selectedRow != -1) {
             controllerCarteDeTelefon.modificaAbonatSelectat(abonatVechi);
         } else {
@@ -545,6 +553,7 @@ public class AgendaUI extends javax.swing.JFrame {
         final JFileChooser fc = new JFileChooser();
         int returnVal = fc.showSaveDialog(null);
 
+        //check if there is an already running timertask
         if (taskSavetoFile != null) {
             timerSavetoFile.cancel();
             timerSavetoFile.purge();
@@ -553,6 +562,7 @@ public class AgendaUI extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             controllerCarteDeTelefon.saveToFile(file);
+            //create and assign a new TimerTask to timer
             taskSavetoFile = new TimerTask() {
                 @Override
                 public void run() {
@@ -562,7 +572,6 @@ public class AgendaUI extends javax.swing.JFrame {
 
             };
             timerSavetoFile.schedule(taskSavetoFile, 0, 50000);
-            //This is where a real application would open the file.
         }
 
 
@@ -575,8 +584,8 @@ public class AgendaUI extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
             List<Abonat> loadDatabaseFromFile = controllerCarteDeTelefon.loadDatabaseFromFile(file);
-            System.out.println(loadDatabaseFromFile);
-            modelTabelAbonati.setInputDataFrom(loadDatabaseFromFile);
+
+            controllerCarteDeTelefon.setModelInputDataFrom(loadDatabaseFromFile);
             //This is where a real application would open the file.
         }
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
@@ -589,7 +598,7 @@ public class AgendaUI extends javax.swing.JFrame {
     private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
         // TODO add your handling code here:
         JDialog dlg = new JDialog();
-        JTextArea textAreal = new JTextArea("     Tafuni Radu     \n email: rtafuni20@yahoo.com", 5, 10);
+        JTextArea textAreal = new JTextArea("Aplicatie: AgendaTelefonica\nCod Activare: activ123\nAutor: Tafuni Radu\nemail: rtafuni20@yahoo.com", 5, 10);
         textAreal.setColumns(30);
         textAreal.setLineWrap(true);
         textAreal.setPreferredSize(new Dimension(100, 100));
@@ -598,6 +607,32 @@ public class AgendaUI extends javax.swing.JFrame {
         dlg.setVisible(true);
 
     }//GEN-LAST:event_jMenuItemAboutActionPerformed
+
+    private void jMenuItemAdaugaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAdaugaActionPerformed
+        // TODO add your handling code here:
+        EnableTextFieldsUI();
+    }//GEN-LAST:event_jMenuItemAdaugaActionPerformed
+
+    private void jMenuItemStergereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemStergereActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = jTableAbonati.getSelectedRow();
+        if (selectedRow != -1) {
+            controllerCarteDeTelefon.stergeAbonatSelectat(selectedRow);
+        } else {
+            JOptionPane.showMessageDialog(null, "Selectie goala");
+        }
+    }//GEN-LAST:event_jMenuItemStergereActionPerformed
+
+    private void jMenuItemModificareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemModificareActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = jTableAbonati.getSelectedRow();
+        Abonat abonatVechi = controllerCarteDeTelefon.getAbonatAtPosition(selectedRow);
+        if (selectedRow != -1) {
+            controllerCarteDeTelefon.modificaAbonatSelectat(abonatVechi);
+        } else {
+            JOptionPane.showMessageDialog(null, "Selectie goala");
+        }
+    }//GEN-LAST:event_jMenuItemModificareActionPerformed
 
     public void cleanFieldsAfterAdd() {
         textNume.setText("");
@@ -618,8 +653,8 @@ public class AgendaUI extends javax.swing.JFrame {
     private javax.swing.JButton butonModificare;
     private javax.swing.JButton butonSalavare;
     private javax.swing.JButton butonStergere;
-    private javax.swing.JButton jButtonCautare;
     private javax.swing.JLabel jLabelCNP;
+    private javax.swing.JLabel jLabelFiltru;
     private javax.swing.JLabel jLabelNrTel;
     private javax.swing.JLabel jLabelNume;
     private javax.swing.JLabel jLabelPrenume;
@@ -629,11 +664,10 @@ public class AgendaUI extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenuItem jMenuItemAbout;
-    private javax.swing.JMenuItem jMenuItemActualizare;
     private javax.swing.JMenuItem jMenuItemAdauga;
-    private javax.swing.JMenuItem jMenuItemCauta;
     private javax.swing.JMenuItem jMenuItemIesire;
     private javax.swing.JMenuItem jMenuItemInregistrare;
+    private javax.swing.JMenuItem jMenuItemModificare;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JMenuItem jMenuItemStergere;
@@ -649,13 +683,6 @@ public class AgendaUI extends javax.swing.JFrame {
     private javax.swing.JTextField textPrenume;
     // End of variables declaration//GEN-END:variables
 
-    private void saveToDatabase() {
-        ModelTabelAbonat model = (ModelTabelAbonat) jTableAbonati.getModel();
-        List<Abonat> abonati = model.getAbonati();
-        System.out.println(abonati);
-
-    }
-
     private void listenToTableSelection() {
         ListSelectionModel cellSelectionModel = jTableAbonati.getSelectionModel();
         cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -663,13 +690,15 @@ public class AgendaUI extends javax.swing.JFrame {
             @Override
             public void valueChanged(ListSelectionEvent lse) {
                 int selectedRow = jTableAbonati.getSelectedRow();
-                Abonat abonatSelectat = modelTabelAbonati.getAbonat(selectedRow);
-                EnableTextFieldsUI();
-                textNume.setText(abonatSelectat.getNume());
-                textPrenume.setText(abonatSelectat.getPrenume());
-                textCNP.setText(abonatSelectat.getCnp());
-                textNrTel.setText(abonatSelectat.getTelefon().toString());
+                if (selectedRow != -1) {
+                    Abonat abonatSelectat = controllerCarteDeTelefon.getAbonatAtPosition(selectedRow);
+                    EnableTextFieldsUI();
+                    textNume.setText(abonatSelectat.getNume());
+                    textPrenume.setText(abonatSelectat.getPrenume());
+                    textCNP.setText(abonatSelectat.getCnp());
+                    textNrTel.setText(abonatSelectat.getTelefon().toString());
 
+                }
             }
         });
 
