@@ -44,6 +44,7 @@ public class AgendaUI extends javax.swing.JFrame {
 
     private ModelTabelAbonat modelTabelAbonati;
     Timer timerReclame;
+    Timer timerSavetoFile;
 
     //path to the pictures directory; used for slide show
     Path path = Paths.get("pictures");
@@ -51,6 +52,9 @@ public class AgendaUI extends javax.swing.JFrame {
 
     // File representing the folder with the pictures 
     final File dir = new File(absolutePath.toString());
+
+    // File to save the abonati list
+    File file;
 
     // array of supported extensions 
     static final String[] EXTENSIONS = new String[]{
@@ -87,7 +91,6 @@ public class AgendaUI extends javax.swing.JFrame {
      * Creates new form AgendaUI
      *
      * @param carteDeTelefonController
-     * @throws java.lang.InterruptedException
      */
     public AgendaUI(CarteDeTelefonController carteDeTelefonController) {
 
@@ -121,6 +124,10 @@ public class AgendaUI extends javax.swing.JFrame {
         };
         t.schedule(task, 0, 5000);
 
+        //set a timer to save the phonebook to a selected file at every 5 min
+        timerSavetoFile = new Timer();
+
+        //table filtering functionality
         this.rowSorter = new TableRowSorter<>(jTableAbonati.getModel());
         jTableAbonati.setRowSorter(rowSorter);
         jTextFilter.getDocument().addDocumentListener(new DocumentListener() {
@@ -537,9 +544,21 @@ public class AgendaUI extends javax.swing.JFrame {
         final JFileChooser fc = new JFileChooser();
         int returnVal = fc.showSaveDialog(null);
 
+        TimerTask taskSavetoFile = new TimerTask() {
+            @Override
+            public void run() {
+                controllerCarteDeTelefon.saveToFile(file);
+                System.out.println("CarteDeTelefon salvata in fisier");
+            }
+
+        };
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            controllerCarteDeTelefon.saveToFile(file);
+            controllerCarteDeTelefon.saveToFile(file);           
+            timerSavetoFile.cancel();
+            timerSavetoFile.purge();
+            timerSavetoFile.schedule(taskSavetoFile, 0, 5000);
             //This is where a real application would open the file.
         }
 
@@ -551,7 +570,7 @@ public class AgendaUI extends javax.swing.JFrame {
         int returnVal = fc.showOpenDialog(null);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
+            file = fc.getSelectedFile();
             List<Abonat> loadDatabaseFromFile = controllerCarteDeTelefon.loadDatabaseFromFile(file);
             System.out.println(loadDatabaseFromFile);
             modelTabelAbonati.setInputDataFrom(loadDatabaseFromFile);
